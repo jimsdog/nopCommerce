@@ -1783,7 +1783,7 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (357, N'rewardp
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (358, N'currencysettings.displaycurrencylabel', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (359, N'currencysettings.primarystorecurrencyid', N'1', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (360, N'currencysettings.primaryexchangeratecurrencyid', N'1', 0)
-INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (361, N'currencysettings.activeexchangerateprovidersystemname', N'CurrencyExchange.MoneyConverter', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (361, N'currencysettings.activeexchangerateprovidersystemname', N'ExchangeRate.EcbExchange', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (362, N'currencysettings.autoupdateenabled', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (363, N'measuresettings.basedimensionid', N'1', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (364, N'measuresettings.baseweightid', N'2', 0)
