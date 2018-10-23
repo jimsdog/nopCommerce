@@ -217,6 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.ShowOnProductPage = true;
+            model.AttributeTypeId = (int)SpecificationAttributeType.CustomText;
 
             model.AvailableAttributes = _cacheManager.Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
             {

@@ -19,6 +19,54 @@
 
                     <script>
                         $(document).ready(function() {
+                            function setValueEditor(container, options) {
+                                if (options.model.AttributeTypeId === @((int) SpecificationAttributeType.Option)) {
+                                    var dropDownList =
+                                        $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:SpecificationAttributeOptionId"/>')
+                                            .appendTo(container).kendoDropDownList()
+                                            .data("kendoDropDownList");
+                                    $.ajax({
+                                        type: "GET",
+                                        url:
+                                            "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
+                                        data: { "attributeId": options.model.AttributeId },
+                                        success: function(data) {
+                                            var availableOptions = [];
+                                            $.each(data,
+                                                function(id, option) {
+                                                    availableOptions.push({
+                                                        Id: option.id,
+                                                        Name: option.name
+                                                    });
+                                                });
+                                            dropDownList.setDataSource(availableOptions);
+                                            dropDownList.select(function(item) {
+                                                return item.Id ===
+                                                    options.model.SpecificationAttributeOptionId;
+                                            });
+                                        }
+                                    });
+                                } else if (options.model.AttributeTypeId === @((int) SpecificationAttributeType.CustomHtmlText)) {
+                                    $('<div data-bind="value:ValueRaw" style="min-height: 40px"></div>')
+                                        .appendTo(container)
+                                        .kendoEditor({
+                                            encoded: false,
+                                            tools: [
+                                                'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript',
+                                                'fontName', 'fontSize',
+                                                'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
+                                                'createLink', 'unlink',
+                                                'viewHtml'
+                                            ]
+                                        })
+                                        .data("kendoEditor");
+                                }
+                                else {
+                                    $('<input class="k-textbox" name="ValueRaw" data-bind="value:ValueRaw" />')
+                                        .appendTo(container);
+                                }
+                            }
+
                             $("#specificationattributes-grid").kendoGrid({
                                 dataSource: {
                                     type: "json",
@@ -105,27 +153,18 @@
                                         title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value")",
                                         width: 200,
                                         encoded: false,
-                                        editor: function setDropDownEditor(container, options) {
-                                                    if (options.model.AttributeTypeId == @((int)SpecificationAttributeType.Option)) {
-                                                        var dropDownList = $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:SpecificationAttributeOptionId"/>')
-                                                            .appendTo(container).kendoDropDownList().data("kendoDropDownList");
-                                                        $.ajax({
-                                                            type: "GET",
-                                                            url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
-                                                            data: { "attributeId": options.model.AttributeId },
-                                                            success: function (data) {
-                                                                var availableOptions = [];
-                                                                $.each(data, function(id, option) {
-                                                                    availableOptions.push({ Id: option.id, Name: option.name });
-                                                                });
-                                                                dropDownList.setDataSource(availableOptions);
-                                                                dropDownList.select(function(item) {
-                                                                    return item.Id === options.model.SpecificationAttributeOptionId;
-                                                                });
-                                                            }
-                                                        });
-                                                    }
-                                                }
+                                        editor: setValueEditor,
+                                        template: function (item) {
+                                            item.ValueRaw = !!item.ValueRaw ? item.ValueRaw : "";
+
+                                            if (item.AttributeTypeId === @((int) SpecificationAttributeType.CustomHtmlText)) {
+                                                item.ValueRaw = item.ValueRaw
+                                                    .replace(/&lt;/g, '<')
+                                                    .replace(/&gt;/g, '>')
+                                                    .replace(/&amp;/g, '&');
+                                            }
+                                            return item.ValueRaw;
+                                        }
                                     }, {
                                         field: "AllowFiltering",
                                         title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")",

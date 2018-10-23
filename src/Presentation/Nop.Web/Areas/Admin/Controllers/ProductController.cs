@@ -1805,6 +1805,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
+            psa.CustomValue = model.ValueRaw;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
 
             return new NullJsonResult();
