@@ -114,10 +114,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            //prepare model
-            var model = _currencyModelFactory.PrepareCurrencySearchModel(new CurrencySearchModel(), liveRates);
-
-            return View(model);
+            try
+            {
+                //prepare model
+                var model = _currencyModelFactory.PrepareCurrencySearchModel(new CurrencySearchModel(), liveRates);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _notificationService.ErrorNotification(e);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost]

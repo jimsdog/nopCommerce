@@ -7,7 +7,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Framework.Extensions;
@@ -27,7 +26,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly INotificationService _notificationService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWorkContext _workContext;
 
@@ -40,7 +38,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            INotificationService notificationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWorkContext workContext)
         {
@@ -49,7 +46,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
-            this._notificationService = notificationService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._workContext = workContext;
         }
@@ -98,18 +94,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId, false)
                 ?? throw new NopException("Primary exchange rate currency is not set");
 
-            var exchangeRates = new List<ExchangeRate>() as IList<ExchangeRate>;
-
-            try
-            {
-                //get exchange rates
-                exchangeRates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
-            }
-            catch (Exception e)
-            {
-                _notificationService.ErrorNotification(e);
-                return;
-            }
+            //get exchange rates
+            var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
 
             //filter by existing currencies
             var currencies = _currencyService.GetAllCurrencies(true, loadCacheableCopy: false);
