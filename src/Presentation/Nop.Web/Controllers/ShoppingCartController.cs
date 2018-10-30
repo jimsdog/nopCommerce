@@ -1366,7 +1366,8 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
             
-            if (_orderSettings.AnonymousCheckoutAllowed)
+            if (_orderSettings.AnonymousCheckoutAllowed
+                && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
             {
                 return RedirectToRoute("Checkout");
             }
