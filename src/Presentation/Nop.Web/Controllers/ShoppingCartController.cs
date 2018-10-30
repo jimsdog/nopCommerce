@@ -1365,7 +1365,12 @@ namespace Nop.Web.Controllers
                 model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, validateCheckoutAttributes: true);
                 return View(model);
             }
-
+            
+            if (_orderSettings.AnonymousCheckoutAllowed)
+            {
+                return RedirectToRoute("Checkout");
+            }
+            
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
